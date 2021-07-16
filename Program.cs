@@ -8,7 +8,7 @@ namespace unpnesmmw
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("unpnesmmw V1.0 - Unpack the PocketNES Menu Maker Roms");
+            Console.WriteLine("unpnesmmw V1.1 - Unpack the PocketNES Menu Maker Roms");
             Console.WriteLine("BY R-YaTian - github.com/R-YaTian/unpnesmmw");
             if (args != null && args.Length > 0)
             {
@@ -26,8 +26,8 @@ namespace unpnesmmw
             }
             else
             {
-                Console.WriteLine("Please offer the file path or a file name.");
-                Console.WriteLine("Press any key to exit.");
+                Console.WriteLine("Please offer the file path or a file name.\nPress any key to exit.");
+                //Console.WriteLine("Press any key to exit.");
                 Console.ReadKey();
             }
         }
@@ -42,7 +42,8 @@ namespace unpnesmmw
             var fs = new FileStream(file_name, FileMode.Open);
             buf = new byte[fs.Length];
             fs.Read(buf, 0, (int)fs.Length);
-            var offset = 0;
+            int offset = 0;
+            bool flag = false;
             do
             {
                 int fStart = FIndexOf(buf, header, offset);
@@ -52,7 +53,10 @@ namespace unpnesmmw
                     fEnd = buf.Length;
                 //Console.WriteLine("{0},{1}", fStart, fEnd); Debug out
                 if (fStart == -1 || fEnd == -1)
-                    _ = buf.Length;
+                {
+                    flag = true;
+                    break;
+                }
                 newbuf = new byte[fEnd - fStart];
                 fname = new byte[0x30];
                 Array.Copy(buf, fStart, newbuf, 0, fEnd - fStart);
@@ -70,7 +74,10 @@ namespace unpnesmmw
                 offset += 0x30;
             }
             while (offset < buf.Length);
-            Console.WriteLine("Done! Press any key to exit.");
+            if (!flag)
+                Console.WriteLine("Done! Press any key to exit.");
+            else
+                Console.WriteLine("Error: wrong file type.\nPress any key to exit.");
             Console.ReadKey();
         }
         private static int FIndexOf(byte[] srcBytes, byte[] searchBytes, int offset = 0)
