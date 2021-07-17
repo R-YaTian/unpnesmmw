@@ -8,7 +8,7 @@ namespace unpnesmmw
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("unpnesmmw V1.1 - Unpack the PocketNES Menu Maker Roms");
+            Console.WriteLine("unpnesmmw V1.2 - Unpack the PocketNES Menu Maker Roms");
             Console.WriteLine("BY R-YaTian - github.com/R-YaTian/unpnesmmw");
             if (args != null && args.Length > 0)
             {
@@ -27,7 +27,6 @@ namespace unpnesmmw
             else
             {
                 Console.WriteLine("Please offer the file path or a file name.\nPress any key to exit.");
-                //Console.WriteLine("Press any key to exit.");
                 Console.ReadKey();
             }
         }
@@ -48,15 +47,15 @@ namespace unpnesmmw
             {
                 int fStart = FIndexOf(buf, header, offset);
                 int fEnd = FIndexOf(buf, header, fStart + header.Length);
-                fEnd -= 0x30;
-                if (fStart != -1 && fEnd == -49)
-                    fEnd = buf.Length;
-                //Console.WriteLine("{0},{1}", fStart, fEnd); Debug out
-                if (fStart == -1 || fEnd == -1)
+                if (fStart == -1 && fEnd == -1)
                 {
                     flag = true;
                     break;
                 }
+                fEnd -= 0x30;
+                if (fEnd == -49)
+                    fEnd = buf.Length;
+                //Console.WriteLine("{0},{1}", fStart, fEnd); //Debug out
                 newbuf = new byte[fEnd - fStart];
                 fname = new byte[0x30];
                 Array.Copy(buf, fStart, newbuf, 0, fEnd - fStart);
